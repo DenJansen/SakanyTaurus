@@ -30,8 +30,11 @@ This page will provide an as-the-crow-flies compass which will point to the next
 ## userDb
 A database of registered users
 
-## userRoute
-Stores the user's current route
+## userRoutes
+Stores the user's routes
+
+## routeSteps
+Stores the steps for the given route
 
 ## favoritePubs
 Stretch goal: allows user to store favorite locations for future pub crawls
