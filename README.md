@@ -27,13 +27,13 @@ As the user visits locations, they can mark it off as visited on this page, whic
 This page will provide an as-the-crow-flies compass which will point to the next pub. As a stretch goal, there will be an optional navigation button that sends the user to google maps if they prefer specific navigation instructions.
 
 # Data Model
-## user
+## userDb
 A database of registered users
 
-## user_route
+## userRoute
 Stores the user's current route
 
-## favorites
+## favoritePubs
 Stretch goal: allows user to store favorite locations for future pub crawls
 
 # Schedule
