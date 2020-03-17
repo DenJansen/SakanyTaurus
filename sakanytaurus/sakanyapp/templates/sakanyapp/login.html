@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- import Vue framework -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- Axios -->
+    <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <!-- import Pure CSS framework -->
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/sakanyapp/stylesheet.css">
@@ -25,25 +27,36 @@
             <h1 class="main-head">Login</h1>
             <div class="main-subhead">
               <div class="pure-form pure-form-stacked">
-                <input type="text" placeholder="Username" v-model="username">
-                <input type="password" placeholder="Password" v-model="password" v-on:keypress.enter="userLogin">
+                <form action="{% url 'sakanyapp:user_login' %}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{{next}}"/>
+                  <input type="text" name="username" id="username" value="" placeholder="Username">
+                  <input type="password" name="password" id="password" value="" placeholder="Password">
+                  <button type="submit" class="pure-button">Login</button>
+                  <button type="submit" class="pure-button" v-on:click="registered=!registered">Register</button>
+                </form>
+                <!-- <input type="text" placeholder="Username" v-model="username">
+                <input type="password" placeholder="Password" v-model="password" v-on:keypress.enter="userLogin"> -->
                 <!-- <div class="g-recaptcha" >
                 </div> -->
-                <button type="submit" class="pure-button" v-on:click="userLogin">Login</button>
-                <button type="submit" class="pure-button" v-on:click="registered=!registered">Register</button>
               </div>
             </div>
           </div>
           <div v-if="registered==false">
             <h1 class="main-head">Register</h1>
             <div class="main-subhead">
+              <h3>Please input your details below:</h3>
               <div class="pure-form pure-form-stacked">
-                <input type="text" placeholder="Username" v-model="username">
-                <input type="password" placeholder="Password" v-model="password" v-on:keypress.enter="userLogin">
+                <input type="text" placeholder="Username" v-model="newusername">
+                <input type="text" placeholder="First Name" v-model="firstname">
+                <input type="text" placeholder="Last Name" v-model="lastname">
+                <input type="email" placeholder="E-mail (optional)" v-model="email1">
+                <input type="email" placeholder="Confirm e-mail" v-model="email2">
+                <input type="password" placeholder="Password" v-model="newpass1">
+                <input type="password" placeholder="Confirm password" v-model="newpass2">
                 <!-- <div class="g-recaptcha" >
                 </div> -->
-                <button type="submit" class="pure-button" v-on:click="userLogin">Login</button>
-                <button type="submit" class="pure-button" v-on:click="registered=!registered">Register</button>
+                <button type="submit" class="pure-button" v-on:click="newUser">Login</button>
               </div>
             </div>
           </div>
@@ -52,15 +65,29 @@
     </div>
 
     <script type="text/javascript">
+      let username = document.querySelector("#username")
+      let password = document.querySelector("#password")
+      password.addEventListener('keypress', function(event){
+        if (event.key == "Enter") {
+          if (username && password) {
+            "{% url 'sakanyapp:user_login' %}"
+          }
+        }
+      })
       let app = new Vue({
         el: '#app',
         data: {
-          username: '',
-          password: '',
           registered: true,
+          newusername: '',
+          firstname: '',
+          lastname: '',
+          email1: '',
+          email2: '',
+          newpass1: '',
+          newpass2: '',
         },
         methods: {
-          userLogin() {
+          newUser() {
             return
           }
         }

@@ -10,6 +10,7 @@
  */
 body {
     line-height: 1.7em;
+    background: #3a3d32;
     color: #7f8c8d;
     font-size: 13px;
 }
@@ -21,7 +22,7 @@ h4,
 h5,
 h6,
 label {
-    color: #34495e;
+    color: #F3F1E0;
 }
 
 .pure-img-responsive {
@@ -157,7 +158,6 @@ These are the styles for the main view */
 .main-head {
     font-size: 20px;
     font-weight: bold;
-    color: white;
     border: 3px solid white;
     padding: 1em 1.6em;
     font-weight: 100;
@@ -176,6 +176,10 @@ These are the styles for the main view */
  * -- SPLASH STYLES --
  * This is the blue top section that appears on the page.
  */
+
+.alert {
+  color: #eb280e;
+}
 
 .splash-container {
     background: #3a3d32;
