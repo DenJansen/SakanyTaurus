@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- import Vue framework -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- Axios -->
+    <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <!-- import Pure CSS framework -->
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/sakanyapp/stylesheet.css">
@@ -18,60 +20,171 @@
         </div>
       </div>
       <div class="main">
-        <div id="map" style="height: 400px; width: 500px;"></div>
+        <div class="pure-form pure-flex-row">
+          <input type="text" v-model="address" placeholder="Input an address" v-on:keypress.enter="submitAddress">
+          <button type="submit" class="pure-button" v-on:click="submitAddress">Submit</button>
+        </div>
+        <div class="pure-g" v-if="submitted">
+          <div class="pure-u-1-2">
+            <div class="pure-menu custom-restricted-width">
+              <ul class="pure-menu-list">
+                <li @click="pubSelected(pub, i)" v-for="(pub, i) in pubresults" class="pure-menu-item pure-flex-container pure-flex-column">
+                  <div v-html="pub.name"></div>
+                  <div v-html="pub.location.address1"></div>
+                  <div v-bind:style="{ fontSize: .7 + 'em' }" class="pure-flex-row">
+                    <div>[[pub.distance]] mi</div>
+                    <div v-html="pub.rating"></div>
+                </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="pure-u-1-2">
+            <div class="pure-form pure-flex-row-norm" v-if="selectedpubs[0]">
+              <input type="text" v-model="crawlname" placeholder="Name this Crawl" v-on:keypress.enter="createCrawl">
+              <button type="submit" class="pure-button" v-on:click="createCrawl">Submit</button>
+            </div>
+            <div class="pure-menu custom-restricted-width">
+              <ul class="pure-menu-list">
+                <li @click="pubDeselected(selectedpub, i)" v-for="(selectedpub, i) in selectedpubs" class="pure-menu-item pure-flex-container pure-flex-column">
+                  <div v-html="selectedpub.name"></div>
+                  <div v-html="selectedpub.location.address1"></div>
+                  <div v-bind:style="{ fontSize: .7 + 'em' }" class="pure-flex-row">
+                    <div>[[selectedpub.distance]] mi</div>
+                    <div v-html="selectedpub.rating"></div>
+                </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div>
+          [[ origin[0] ]]
+        </div>
+        <div>
+          [[ origin[1] ]]
+        </div>
+        <div v-for="pub in pubresults">
+          [[ pub.alias ]]
+        </div>
+        <div v-if="displaymap">
+          <div id="map" style="height: 60vh; width: 80vw;"></div>
+        </div>
       </div>
     </div>
 
     <script type="text/javascript">
-      var locations = [
-        ['Bondi Beach', -33.890542, 151.274856, 4],
-        ['Coogee Beach', -33.923036, 151.259052, 5],
-        ['Cronulla Beach', -34.028249, 151.157507, 3],
-        ['Manly Beach', -33.80010128657071, 151.28747820854187, 2],
-        ['Maroubra Beach', -33.950198, 151.259302, 1]
-      ];
-      var map;
-      function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -33.92, lng: 151.25},
-          zoom: 10,
-        });
-        var infowindow = new google.maps.InfoWindow();
+      // var locations = [
+      //   ['Bondi Beach', -33.890542, 151.274856, 4],
+      //   ['Coogee Beach', -33.923036, 151.259052, 5],
+      //   ['Cronulla Beach', -34.028249, 151.157507, 3],
+      //   ['Manly Beach', -33.80010128657071, 151.28747820854187, 2],
+      //   ['Maroubra Beach', -33.950198, 151.259302, 1]
+      // ];
+      // var coordinates
+      // var map;
+      // function initMap() {
+      //   map = new google.maps.Map(document.getElementById('map'), {
+      //     center: {lat: -33.92, lng: 151.25},
+      //     zoom: 10,
+      //   });
+      //   var infowindow = new google.maps.InfoWindow();
+      //
+      //   var marker, i;
+      //
+      //   setTimeout(function(){
+      //     for (i = 0; i < locations.length; i++) {
+      //       createMarkers(i);
+      //     }
+      //   }, 200)
+      // }
+      // function createMarkers(i) {
+      //   setTimeout(function() {
+      //     marker = new google.maps.Marker({
+      //       position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+      //       title:locations[i][0],
+      //       map: map,
+      //       animation: google.maps.Animation.DROP
+      //     });
+      //     google.maps.event.addListener(marker, 'click', (function(marker, i) {
+      //       return function() {
+      //         infowindow.setContent(locations[i][0]);
+      //         infowindow.open(map, marker);
+      //       }
+      //     })(marker, i));
+      //   }, 200*i);
+      // }
 
-        var marker, i;
-
-        setTimeout(function(){
-          for (i = 0; i < locations.length; i++) {
-            createMarkers(i);
-          }
-        }, 200)
-      }
-      function createMarkers(i) {
-        setTimeout(function() {
-          marker = new google.maps.Marker({
-            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-            title:locations[i][0],
-            map: map,
-            animation: google.maps.Animation.DROP
-          });
-          google.maps.event.addListener(marker, 'click', (function(marker, i) {
-            return function() {
-              infowindow.setContent(locations[i][0]);
-              infowindow.open(map, marker);
-            }
-          })(marker, i));
-        }, 200*i);
-      }
       let app = new Vue({
         el: '#app',
+        delimiters: ['[[',']]'],
         data: {
-
+          address: '',
+          pubresults: [],
+          origin: [],
+          locations: [],
+          submitted: false,
+          displaymap: false,
+          selectedpubs: [],
+          crawlname: '',
         },
         methods: {
-
+          submitAddress: function() {
+            if (this.address) {
+              axios({
+                method: 'post',
+                url: '{% url 'sakanyapp:findpub' %}',
+                headers: {
+                  'X-CSRFToken':
+                  '{{csrf_token}}'
+                },
+                data: {
+                  address: this.address
+                }
+              }).then(response => {
+                this.submitted = true
+                this.address = ''
+                console.log(response.data.pubresults)
+                this.pubresults=response.data.pubresults
+                this.origin = response.data.origin
+                for (pub of this.pubresults) {
+                  pub.distance = (pub.distance * 0.000621371).toFixed(2)
+                }
+              })
+            }
+          },
+          mapPoints: function() {
+            for (pub in this.pubresults) {
+              this.locations.push([pub.name, pub.coordinates.latitude, pub.coordinates.longitude])
+            }
+          },
+          pubSelected: function(pub, i) {
+            this.selectedpubs.push(pub)
+            this.pubresults.splice(i, 1)
+          },
+          pubDeselected: function(pub, i) {
+            this.pubresults.push(pub)
+            this.selectedpubs.splice(i, 1)
+          },
+          createCrawl: function() {
+            if (this.selectedpubs && this.crawlname) {
+              axios({
+                method: 'post',
+                url: '{% url 'sakanyapp:newcrawl' %}',
+                headers: {
+                  'X-CSRFToken':
+                  '{{csrf_token}}'
+                },
+                data: {
+                  pub_route: this.selectedpubs
+                }
+              })
+            }
+          }
         }
       })
+      console.log(app.locations)
     </script>
-    <script src="http://maps.google.com/maps/api/js?key={{mapapi}}&callback=initMap" async defer></script>
+    <!-- <script src="http://maps.google.com/maps/api/js?key={{mapapi}}&callback=initMap" async defer></script> -->
   </body>
 </html>

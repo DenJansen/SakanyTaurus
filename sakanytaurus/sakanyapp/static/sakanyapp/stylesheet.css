@@ -65,8 +65,52 @@ label {
     font-size: 100%;
     width: 100%;
     margin-bottom: 1em;
+    margin-right: 1em;
     background: #F3F1E0;
     color: #3a3d32;
+}
+
+.pure-flex-container {
+  border: 1px solid;
+  border-radius: 8px;
+  margin: 5px;
+  color: #F3F1E0;
+  background-color: #D88429;
+}
+
+.pure-flex-row {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  justify-content: space-around;
+}
+
+.pure-flex-row-norm {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  justify-content: normal;
+  margin: 5px;
+}
+
+.pure-flex-column {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.pure-form.pure-flex-row button {
+  background-color: #D88429;
+  color: #F3F1E0;
+  margin-bottom: 1em;
+  border-radius: 5px;
+}
+
+.pure-form.pure-flex-row-norm button {
+  background-color: #D88429;
+  color: #F3F1E0;
+  margin-bottom: 1em;
+  border-radius: 5px;
 }
 
 /*
@@ -149,7 +193,7 @@ These are the styles for the main view */
     height: 50%;
     margin: auto;
     position: absolute;
-    top: 100px; left: 0; bottom: 0; right: 0;
+    top: 0; left: 0; bottom: 0; right: 0;
     text-align: center;
     text-transform: uppercase;
 }
@@ -167,6 +211,53 @@ These are the styles for the main view */
 
 /* This is the subheading that appears on the blue section */
 .main-subhead {
+    color: white;
+    letter-spacing: 0.05em;
+    opacity: 0.8;
+}
+
+.custom-restricted-width {
+  max-width:100%
+}
+
+/* -- LOGIN STYLES --
+These are the styles for the login view */
+
+.login-container {
+    background: #3a3d32;
+    z-index: 1;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed !important;
+}
+
+.login {
+    /* absolute center .login within .login-container */
+    width: 80%;
+    height: 50%;
+    margin: auto;
+    position: absolute;
+    top: 100px; left: 0; bottom: 0; right: 0;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/* This is the login heading that appears on the blue section */
+.login-head {
+    font-size: 20px;
+    font-weight: bold;
+    border: 3px solid white;
+    padding: 1em 1.6em;
+    font-weight: 100;
+    border-radius: 5px;
+    line-height: 1em;
+}
+
+/* This is the subheading that appears on the blue section */
+.login-subhead {
     color: white;
     letter-spacing: 0.05em;
     opacity: 0.8;

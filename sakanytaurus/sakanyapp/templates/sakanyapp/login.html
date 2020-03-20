@@ -21,11 +21,11 @@
           <a class="pure-menu-heading" href="">Sakany Taurus: A Pub Crawler</a>
         </div>
       </div>
-      <div class="main-container">
-        <div class="main">
+      <div class="login-container">
+        <div class="login">
           <div v-if="registered==true">
-            <h1 class="main-head">Login</h1>
-            <div class="main-subhead">
+            <h1 class="login-head">Login</h1>
+            <div class="login-subhead">
               <div class="pure-form pure-form-stacked">
                 <form action="{% url 'sakanyapp:user_login' %}" method="post">
                   {% csrf_token %}
@@ -43,8 +43,8 @@
             </div>
           </div>
           <div v-if="registered==false">
-            <h1 class="main-head">Register</h1>
-            <div class="main-subhead">
+            <h1 class="login-head">Register</h1>
+            <div class="login-subhead">
               <h3>Please input your details below:</h3>
               <div class="pure-form pure-form-stacked">
                 <input type="text" placeholder="Username" v-model="newusername">
