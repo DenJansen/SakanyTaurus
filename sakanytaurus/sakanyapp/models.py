@@ -25,7 +25,7 @@ class UserRoute(models.Model):
         return 'User: ' + str(self.creator) + ' | Route Name: ' + self.name + ' | Start: ' + self.start_dt() + ' | End: ' + self.end_dt()
 
 class RouteStep(models.Model):
-    route = models.ForeignKey(UserRoute, on_delete=models.CASCADE)
+    route = models.ForeignKey(UserRoute, on_delete=models.CASCADE, related_name='steps')
     order_num = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)])
     loc_name = models.CharField(max_length = 30)
     loc_rating = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(10)])

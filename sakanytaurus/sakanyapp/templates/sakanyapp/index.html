@@ -9,7 +9,7 @@
     <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <!-- import Pure CSS framework -->
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-" crossorigin="anonymous">
-    <link rel="stylesheet" href="/static/sakanyapp/stylesheet.css">
+I     <link rel="stylesheet" href="/static/sakanyapp/stylesheet.css">
     <title></title>
   </head>
   <body>
@@ -176,8 +176,11 @@
                   '{{csrf_token}}'
                 },
                 data: {
-                  pub_route: this.selectedpubs
+                  pub_route: this.selectedpubs,
+                  crawlname: this.crawlname
                 }
+              }).then(response => {
+                window.location = "{% url 'sakanyapp:profile' %}"
               })
             }
           }

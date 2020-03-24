@@ -90,20 +90,33 @@ def findpub(request):
 
 @login_required
 def newcrawl(request):
-    pub_route = json.loads(request.body)
-    print(pub_route)
-    # route = pub_route['route']
-    # order_num = pub_route['order_num']
-    # loc_name = pub_route['loc_name']
-    # loc_rating = pub_route['loc_rating']
-    # loc_address = pub_route['loc_address']
-    # loc_lat = pub_route['loc_lat']
-    # loc_lon = pub_route['loc_lon']
-    # open_time = pub_route['open_time']
-    # close_time = pub_route['close_time']
-    # arr_time = pub_route['arr_time']
-    # visited = pub_route['visited']
-    #
-    # create_crawl = RouteStep
+    json_data = json.loads(request.body)
+    pub_route = json_data['pub_route']
+    route = json_data['crawlname']
+    print(json_data['pub_route'])
+    print(json_data['crawlname'])
 
-    return HttpResponse("Success!")
+    newcrawl = UserRoute(creator=request.user, name=route)
+    newcrawl.save()
+
+    order_num = 0
+    for pub in pub_route:
+        order_num += 1
+        loc_name = pub['name']
+        loc_rating = pub['rating']
+        print(pub['location']['display_address'])
+        loc_address = ', '.join(pub['location']['display_address'])
+        loc_lat = pub['coordinates']['latitude']
+        loc_lon = pub['coordinates']['longitude']
+        create_crawl = RouteStep(route=newcrawl, order_num=order_num, loc_name=loc_name, loc_rating=loc_rating, loc_address=loc_address, loc_lat=loc_lat, loc_lon=loc_lon)
+        create_crawl.save()
+
+    return HttpResponseRedirect(reverse('sakanyapp:profile'))
+
+@login_required
+def profile(request):
+    routes = UserRoute.objects.all().filter(creator=request.user)
+    context = {
+        'routes': routes
+    }
+    return render(request, 'sakanyapp/profile.html', context)
