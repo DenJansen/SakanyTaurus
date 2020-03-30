@@ -118,20 +118,26 @@ label {
  * I want my pure-button elements to look a little different
  */
 .pure-button {
-    background-color: #D88429;
-    color: #F3F1E0;
-    padding: 0.5em 2em;
-    border-radius: 5px;
+  background-color: #D88429;
+  color: #F3F1E0;
+  padding: 0.5em 2em;
+  border-radius: 5px;
 }
 
 a.pure-button {
-    background-color: #D88429;
-    color: #F3F1E0;
-    padding: 0.5em 2em;
-    border-radius: 5px;
-    text-transform: none;
+  background-color: #D88429;
+  color: #F3F1E0;
+  padding: 0.5em 2em;
+  border-radius: 5px;
+  text-transform: none;
 }
 
+button.pure-button {
+  background-color: #D88429;
+  color: #F3F1E0;
+  padding: 0.5em 2em;
+  border-radius: 10px;
+}
 
 /*
  * -- MENU STYLES --
@@ -139,33 +145,40 @@ a.pure-button {
  */
 
 .home-menu {
-    padding: 0.5em;
-    text-align: center;
-    box-shadow: 0 1px 1px rgba(0,0,0, 0.10);
+  text-align: center;
+  box-shadow: 0 1px 1px rgba(0,0,0, 0.10);
 }
 .home-menu {
-    background: #D88429;
+  background: #D88429;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 .pure-menu.pure-menu-fixed {
-    /* Fixed menus normally have a border at the bottom. */
-    border-bottom: none;
-    /* I need a higher z-index here because of the scroll-over effect. */
-    z-index: 4;
+  /* Fixed menus normally have a border at the bottom. */
+  border-bottom: none;
+  /* I need a higher z-index here because of the scroll-over effect. */
+  z-index: 4;
 }
 
 .home-menu .pure-menu-heading {
-    color: #F3F1E0;
-    font-weight: 400;
-    font-size: 120%;
+  color: #F3F1E0;
+  font-weight: 400;
+  font-size: 120%;
 }
 
 .home-menu .pure-menu-selected a {
-    color: white;
+  color: white;
 }
 
 .home-menu a {
-    color: #6FBEF3;
+  color: #6FBEF3;
 }
+
+.home-menu img {
+  max-width: 100px;
+}
+
 .home-menu li a:hover,
 .home-menu li a:focus {
     background: none;

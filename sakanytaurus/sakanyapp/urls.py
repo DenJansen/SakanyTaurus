@@ -8,5 +8,6 @@ urlpatterns = [
     path('user_login/', views.user_login, name='user_login'),
     path('findpub/', views.findpub, name='findpub'),
     path('newcrawl/', views.newcrawl, name='newcrawl'),
-    path('profile/', views.profile, name='profile')
+    path('profile/', views.profile, name='profile'),
+    path('routes/', views.routes, name='routes')
 ]

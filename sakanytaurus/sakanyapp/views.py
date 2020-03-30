@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
 from . import secrets
 from .models import UserRoute, RouteStep
@@ -115,8 +116,75 @@ def newcrawl(request):
 
 @login_required
 def profile(request):
+    return render(request, 'sakanyapp/profile.html')
+
+@login_required
+def routes(request):
     routes = UserRoute.objects.all().filter(creator=request.user)
-    context = {
-        'routes': routes
-    }
-    return render(request, 'sakanyapp/profile.html', context)
+    data = []
+    for route in routes:
+        start_dt = ''
+        start_time = ''
+        end_dt = ''
+        end_time = ''
+
+        if route.start_time:
+            start_dt = route.start_time.strftime('%m/%d/%Y')
+            start_time = route.start_time.strftime('%H:%M')
+        if route.end_time:
+            end_dt = route.end_time.strftime('%m/%d/%Y')
+            end_time = route.end_time.strftime('%H:%M')
+
+        steps = RouteStep.objects.all().filter(route=route)
+        routesteps = []
+
+        for step in steps:
+            open_dt = ''
+            open_time = ''
+            close_dt = ''
+            close_time = ''
+            arr_date = ''
+            arr_time = ''
+            if step.open_time:
+                open_dt = step.open_time.strftime('%m/%d/%Y')
+                open_time = step.open_time.strftime('%H:%M')
+            if step.close_time:
+                close_dt = step.close_time.strftime('%m/%d/%Y')
+                close_time = step.close_time.strftime('%H:%M')
+            if step.arr_time:
+                arr_date = step.arr_time.strftime('%m/%d/%Y')
+                arr_time = step.arr_time.strftime('%H:%M')
+            routesteps.append({
+                'order_num': step.order_num,
+                'loc_name': step.loc_name,
+                'loc_rating': step.loc_rating,
+                'loc_address': step.loc_address,
+                'loc_lat': step.loc_lat,
+                'loc_lon': step.loc_lon,
+                'open_dt': open_dt,
+                'open_time': open_time,
+                'close_dt': close_dt,
+                'close_time': close_time,
+                'arr_date': arr_date,
+                'arr_time': arr_time,
+                'visited': str(step.visited)
+            })
+        data.append({
+            'name': route.name,
+            'start_dt': start_dt,
+            'start_time': start_time,
+            'end_dt': end_dt,
+            'end_time': end_time,
+            'steps': routesteps
+        })
+    for dat in data:
+        print("name: " + dat['name'])
+        print("start_dt / start_time: " + dat['start_dt'] + " / " + dat['start_time'])
+        print("end_dt / end_time: " + dat['end_dt'] + " / " + dat['end_time'])
+        for step in dat["steps"]:
+            print(step)
+    # context = {
+    #     'routes': routes
+    # }
+    return JsonResponse({'routes': data})
+    # return render(request, 'sakanyapp/profile.html', context)

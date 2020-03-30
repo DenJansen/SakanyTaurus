@@ -9,19 +9,25 @@
     <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <!-- import Pure CSS framework -->
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" SameSite=None>
     <link rel="stylesheet" href="/static/sakanyapp/stylesheet.css">
+    {% load static %}
     <title></title>
   </head>
   <body>
     <div id="app">
       <div class="header">
         <div class="home-menu pure-menu-horizontal pure-menu-fixed">
-          <a class="pure-menu-heading" href="">Sakany Taurus: A Pub Crawler</a>
+          <a class="pure-menu-heading" href=""><img src="{% static "sakanyapp/logo2.png" %}" alt="logo"></a><span class="pure-menu-heading"> A Pub Crawler</span>
         </div>
       </div>
       <div class="main">
         <div v-for="route in routes">
           <h1><div v-html="route.name"></div></h1>
+          <div v-for="(step, index) in route.steps" class="pure-button-group" role="group">
+            <button v-html="step.loc_name" class="pure-button"></button><br>
+            <i class="fa fa-long-arrow-down" v-if="index != route.steps.length - 1"></i>
+          </div>
         </div>
         <!-- {% for step in route.steps.all %}
         {{ step.loc_name }}
@@ -32,12 +38,20 @@
       let app = new Vue({
         el: '#app',
         data: {
-          counter: 0
+          routes: []
         },
         methods: {
-          distCalc: function() {
-            return
+          getRoutes: function() {
+            axios({
+              method: 'get',
+              url: '{% url 'sakanyapp:routes' %}'
+            }).then(response => {
+              this.routes = response.data.routes
+            })
           }
+        },
+        created: function(){
+          this.getRoutes()
         }
       })
     </script>
