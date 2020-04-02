@@ -188,3 +188,15 @@ def routes(request):
     # }
     return JsonResponse({'routes': data})
     # return render(request, 'sakanyapp/profile.html', context)
+
+@login_required
+def compass(request):
+    # print(request.body)
+    # json_data = json.loads(request.body)
+    publat = request.GET["publat"]
+    publon = request.GET["publon"]
+    context = {
+        'publat': publat,
+        'publon': publon,
+    }
+    return render(request, 'sakanyapp/compass.html', context)

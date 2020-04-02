@@ -25,7 +25,7 @@
         <div v-for="route in routes">
           <h1><div v-html="route.name"></div></h1>
           <div v-for="(step, index) in route.steps" class="pure-button-group" role="group">
-            <button v-html="step.loc_name" class="pure-button"></button><br>
+            <button v-html="step.loc_name" class="pure-button" @click="openCompass(step, index)"></button><br>
             <i class="fa fa-long-arrow-down" v-if="index != route.steps.length - 1"></i>
           </div>
         </div>
@@ -48,6 +48,9 @@
             }).then(response => {
               this.routes = response.data.routes
             })
+          },
+          openCompass: function(pub, index) {
+              window.location = "{% url 'sakanyapp:compass' %}?publat="+pub.loc_lat+"&publon="+pub.loc_lon
           }
         },
         created: function(){

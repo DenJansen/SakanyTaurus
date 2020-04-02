@@ -10,13 +10,14 @@
     <!-- import Pure CSS framework -->
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-" crossorigin="anonymous">
 I     <link rel="stylesheet" href="/static/sakanyapp/stylesheet.css">
+    {% load static %}
     <title></title>
   </head>
   <body>
     <div id="app">
       <div class="header">
         <div class="home-menu pure-menu-horizontal pure-menu-fixed">
-          <a class="pure-menu-heading" href="">Sakany Taurus: A Pub Crawler</a>
+          <a class="pure-menu-heading" href=""><img src="{% static "sakanyapp/logo2.png" %}" alt="logo"></a><span class="pure-menu-heading"> A Pub Crawler</span>
         </div>
       </div>
       <div class="main">
@@ -52,7 +53,7 @@ I     <link rel="stylesheet" href="/static/sakanyapp/stylesheet.css">
                   <div v-bind:style="{ fontSize: .7 + 'em' }" class="pure-flex-row">
                     <div>[[selectedpub.distance]] mi</div>
                     <div v-html="selectedpub.rating"></div>
-                </div>
+                  </div>
                 </li>
               </ul>
             </div>
