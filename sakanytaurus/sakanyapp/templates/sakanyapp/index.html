@@ -16,6 +16,7 @@
   </head>
   <body>
     <div id="app">
+      <!-- creates title header with profile and logout buttons -->
       <div class="header">
         <div class="home-menu pure-menu-horizontal pure-menu-fixed">
             <div class="">
@@ -29,16 +30,20 @@
         </div>
       </div>
       <div class="main">
+        <!-- Starting address form -->
         <div class="pure-form pure-flex-row">
           <input type="text" v-model="address" placeholder="Input a starting address" v-on:keypress.enter="submitAddress">
+          <!-- Initiate axios call -->
           <button type="submit" class="pure-button" v-on:click="submitAddress">Submit</button>
         </div>
+        <!-- Display array of nearby pubs after submission of starting address -->
         <div class="pure-g" v-if="submitted">
           <div class="pure-u-1-2">
             <div class="pure-menu custom-restricted-width">
               <h3>Nearby pubs:</h3>
               <h6>click to add</h6>
               <ul class="pure-menu-list">
+                <!-- Clicking on pub card moves it to the array of selected locations -->
                 <li @click="pubSelected(pub, i)" v-for="(pub, i) in pubresults" class="pure-menu-item pure-flex-container pure-flex-column">
                   <div v-html="pub.name"></div>
                   <div v-html="pub.location.address1"></div>
@@ -46,8 +51,10 @@
                     <span v-html="pub.location.city"></span>, <span v-html="pub.location.state"></span> <span v-html="pub.location.zip_code"></span>
                   </div>
                   <div v-bind:style="{ fontSize: .7 + 'em' }" class="pure-flex-row">
+                    <!-- Newdistance and unit calculated after axios call -->
                     <div>[[pub.newdistance]] [[pub.unit]]</div>
                     <div>
+                      <!-- iterates over the number of stars in the rating, displays a half star if pub.halfstar is a nonzero value, and shows the number of reviews -->
                       <i class="fa fa-star" v-for="i in pub.stars"></i><i class="fa fa-star-half" v-if="pub.halfstar > 0"></i><span> ([[pub.review_count]])</span>
                     </div>
                   </div>
@@ -55,9 +62,11 @@
               </ul>
             </div>
           </div>
+          <!-- Displays once a location is selected and moved from the list of nearby pubs -->
           <div class="pure-u-1-2" v-if="selectedpubs[0]">
             <div class="pure-form pure-flex-column-norm">
               <h3>Your crawl:</h3>
+              <!-- Stores pub crawl with the given name -->
               <input type="text" v-model="crawlname" placeholder="Name this Crawl" v-on:keypress.enter="createCrawl">
               <button type="submit" class="pure-button" v-on:click="createCrawl">Submit</button>
             </div>
@@ -65,6 +74,7 @@
               <h6>click to remove</h6>
               <ul class="pure-menu-list">
                 <div v-for="(selectedpub, i) in selectedpubs">
+                  <!-- Clicking on pub card will remove it from this list and move it back to the list of nearby pubs -->
                   <li @click="pubDeselected(selectedpub, i)" class="pure-menu-item pure-flex-container pure-flex-column">
                     <div v-html="selectedpub.name"></div>
                     <div v-html="selectedpub.location.address1"></div>
@@ -105,6 +115,7 @@
           distance: 0,
         },
         methods: {
+          // axios call of nearby pubs for a given address
           submitAddress: function() {
             if (this.address) {
               axios({
@@ -123,6 +134,8 @@
                 console.log(response.data.pubresults)
                 this.pubresults=response.data.pubresults
                 this.origin = response.data.origin
+                // convert metric distance into miles and feet
+                // if distance is over 1000 ft, it returns the value as miles
                 for (pub of this.pubresults) {
                   if (pub.distance > 304) {
                     pub.newdistance = (pub.distance * 0.000621371).toFixed(2)
@@ -131,6 +144,7 @@
                     pub.newdistance = (pub.distance * 3.28084).toFixed(0)
                     pub.unit = "ft"
                   }
+                  // separates the rating as an integer for number of stars and a zero or nonzero value for half stars
                   pub.stars = pub.rating -(pub.rating % 1)
                   pub.halfstar = pub.rating % 1
                 }
@@ -138,41 +152,51 @@
             }
           },
           mapPoints: function() {
+            // currently unused function, for future map development
             for (pub in this.pubresults) {
               this.locations.push([pub.name, pub.coordinates.latitude, pub.coordinates.longitude])
             }
           },
           pubSelected: function(pub, i) {
+            // move pub to the bottom of the array of selected pubs
             this.selectedpubs.push(pub)
+            // use this pub as the new current location
             this.currentlat = pub.coordinates.latitude
             this.currentlon = pub.coordinates.longitude
+            // remove pub from the current array
             this.pubresults.splice(i, 1)
+            // run function to recalculate distances of all pubs in array of nearby pubs relative to new current location
             for (pubs of this.pubresults) {
               this.distCalc(pubs, i)
             }
+            // reorder pubs by new shortest distance
             this.pubresults.sort((a, b) => {
               return a.distance - b.distance
             })
+            // calculate distance of selected pubs relative to the previous pub in the array, first pub's distance is listed as 0
             index = 0
             for (pubs of this.selectedpubs) {
               index++
+              // for the first pub in the array, store its coordinates as the starting location
               if (index == 1) {
                 this.currentlat = pubs.coordinates.latitude
                 this.currentlon = pubs.coordinates.longitude
               }
               this.distCalc(pubs, i)
+              // stores current pub's coordinates as the starting location, so on next iteration, the next pub's coordinates are calculated against the previous pub in the array
               this.currentlat = pubs.coordinates.latitude
               this.currentlon = pubs.coordinates.longitude
             }
-            this.pubresults.sort((a, b) => {
-              return a.distance - b.distance
-            })
             console.log(this.selectedpubs)
           },
           pubDeselected: function(pub, i) {
+            // move pub back to the array of nearby pubs
             this.pubresults.push(pub)
+            // remove pub from array of selected pubs
             this.selectedpubs.splice(i, 1)
+            // executes if the array of selected pubs is not empty
             if (this.selectedpubs.length > 0) {
+              // uses last pub in the array of selected pubs as the new starting location
               this.currentlat = this.selectedpubs[this.selectedpubs.length-1].coordinates.latitude
               this.currentlon = this.selectedpubs[this.selectedpubs.length-1]
               index = 0
@@ -187,6 +211,7 @@
                 this.currentlon = pubs.coordinates.longitude
               }
             } else {
+              // if array of selected pubs is empty, uses the original coodinates submitted by the user as the current location
               this.currentlat = this.origin[0]
               this.currentlon = this.origin[1]
             }
@@ -199,15 +224,20 @@
             console.log(this.selectedpubs)
           },
           distCalc: function(pub, i) {
+            //radius of the earth
             rad = 6371e3
             pi = Math.PI
+            // convert decimal values into radians
             lat1 = this.currentlat * pi / 180
             lat2 = pub.coordinates.latitude * pi / 180
             deltalat = (pub.coordinates.latitude - this.currentlat) * pi / 180
             deltalon = (pub.coordinates.longitude - this.currentlon) * pi / 180
+            // use trigonometric formulas to calculate distance
             alpha = Math.sin(deltalat/2) * Math.sin(deltalat/2) + Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltalon/2) * Math.sin(deltalon/2)
             charlie = 2 * Math.atan2(Math.sqrt(alpha), Math.sqrt(1-alpha))
+            // store pub's distance in meters
             pub.distance = rad * charlie
+            // convert pub's distance into miles or feet
             if (pub.distance > 304) {
               pub.newdistance = (pub.distance * 0.000621371).toFixed(2)
               pub.unit = "mi"
@@ -216,6 +246,7 @@
               pub.unit = "ft"
             }
           },
+          // creates new pub crawl and opens the user's profile page
           createCrawl: function() {
             if (this.selectedpubs && this.crawlname) {
               axios({
@@ -238,6 +269,5 @@
       })
       console.log(app.locations)
     </script>
-    <!-- <script src="http://maps.google.com/maps/api/js?key={{mapapi}}&callback=initMap" async defer></script> -->
   </body>
 </html>

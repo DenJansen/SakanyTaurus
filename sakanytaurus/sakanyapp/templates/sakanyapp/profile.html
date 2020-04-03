@@ -16,6 +16,7 @@
   </head>
   <body>
     <div id="app">
+      <!-- creates title header with profile and logout buttons -->
       <div class="header">
         <div class="home-menu pure-menu-horizontal pure-menu-fixed">
             <div class="">
@@ -30,6 +31,7 @@
       </div>
       <div class="main">
         <h3>Click on a pub to navigate</h3>
+        <!-- Display pub routes -->
         <div v-for="route in routes">
           <h2><div class="pure-flex-row-center">
             <div></div>
@@ -37,6 +39,7 @@
             <a v-bind:href="'/delete/' + route.id"><i class="fa fa-times-circle"></i></a>
           </h2>
           <div v-for="(step, index) in route.steps" class="pure-button-group" role="group">
+            <!-- clicking on pub card opens compass page -->
             <button class="pure-button" @click="openCompass(step, index)">
               <div v-html="step.loc_name"></div>
               <div v-html="step.loc_address"></div>
@@ -70,6 +73,7 @@
               console.log(this.routes)
             })
           },
+          // send currently selected pub's location to compass page
           openCompass: function(pub, index) {
               window.location = "{% url 'sakanyapp:compass' %}?publat="+pub.loc_lat+"&publon="+pub.loc_lon
           }

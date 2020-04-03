@@ -40,7 +40,7 @@ I   <link rel="stylesheet" href="/static/sakanyapp/compass/css/app.css">
   <div class="container">
 
 
-
+    <!-- create compass -->
     <div class="compass">
 
       <div id="rose" class="compass__rose">
@@ -53,6 +53,7 @@ I   <link rel="stylesheet" href="/static/sakanyapp/compass/css/app.css">
           <polyline points="63,121  67,121  65,119" fill="white"/>
           <polyline points="9,63  9,67  11,65" fill="white"/>
 
+          <!-- displays distance as cardinal value around compass perimeter -->
           <text x="65" y="4.2" font-size="8" text-anchor="middle" fill="white" id="distance"></text>
           <text x="127" y="67" font-size="5" text-anchor="middle" fill="white"></text>
           <text x="65" y="129" font-size="5" text-anchor="middle" fill="white"></text>
@@ -62,6 +63,7 @@ I   <link rel="stylesheet" href="/static/sakanyapp/compass/css/app.css">
 
       </div>
 
+      <!-- creates red compass arrow -->
       <svg class="compass__pointer" viewBox="0 0 130 130" version="1.1" xmlns="http://www.w3.org/2000/svg">
 
         <polyline points="60,60  70,60  65,15" fill="#b60000"/>
@@ -82,22 +84,26 @@ I   <link rel="stylesheet" href="/static/sakanyapp/compass/css/app.css">
     <div id='debug-orientation'></div>
 
     <div class='position row'>
+      <!-- displays heading -->
       <div class='column-33'>
         <div class='label'>HDG</div>
         <div id='position-hng'>n/a</div>
-      </div
-      ><div class='column-33'>
+      </div>
+      <!-- displays latitude -->
+      <div class='column-33'>
         <div class='label'>Lat</div>
         <div id='position-lat'>&#8943;</div>
-      </div
-      ><div class='column-33'>
+      </div>
+      <!-- displays longitude -->
+      <div class='column-33'>
         <div class='label'>Lng</div>
         <div id='position-lng'>&#8943;</div>
       </div>
     </div>
 
+    <!-- creates row of buttons on bottom of display -->
     <div class="options row">
-
+      <!-- orientation lock button -->
       <button id="btn-lock-orientation" class="btn btn--hide options__btn column-25" type="button">
 
         <svg alt="lock off" class="btn__icon btn__icon--inactive" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
@@ -115,33 +121,31 @@ I   <link rel="stylesheet" href="/static/sakanyapp/compass/css/app.css">
           c0-30.755,25.021-55.776,55.775-55.776s55.775,25.021,55.775,55.776v31.585h-25.2v-31.585c0-16.859-13.716-30.576-30.575-30.576
           s-30.575,13.717-30.575,30.576v31.585H201.225z M182.409,242.656v105.169h149.182V242.656H182.409z" fill="white" />
         </svg>
+      </button>
 
+      <!-- night mode button -->
+      <button id="btn-nightmode" class="btn options__btn column-33" type="button">
 
-      </button
-
-      ><button id="btn-nightmode" class="btn options__btn column-33" type="button">
-
-        <svg lock="nightmode off" class="btn__icon btn__icon--inactive" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-           width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
-          <path d="M255.5,156c-55.141,0-100,44.86-100,100c0,55.141,44.859,100,100,100s100-44.859,100-100
-            C355.5,200.86,310.641,156,255.5,156z M255.5,316c-33.084,0-60-26.916-60-60s26.916-60,60-60s60,26.916,60,60S288.584,316,255.5,316
-            z M150.779,179.064l-54.586-54.586l28.285-28.284l54.664,54.664C168.305,158.75,158.73,168.272,150.779,179.064z M332.436,151.28
-            l55.086-55.086l28.285,28.284l-55.164,55.165C352.75,168.805,343.229,159.229,332.436,151.28z M127.039,276H50v-40h77.039
-            c-1.012,6.521-1.539,13.2-1.539,20C125.5,262.801,126.027,269.479,127.039,276z M236,127.463V50h40v77.622
-            c-6.68-1.062-13.525-1.622-20.5-1.622C248.873,126,242.362,126.502,236,127.463z M179.143,361.143l-54.664,54.664l-28.285-28.285
-            l54.586-54.585C158.729,343.729,168.305,353.251,179.143,361.143z M462,236v40h-78.039c1.012-6.521,1.539-13.199,1.539-20
-            c0-6.8-0.527-13.479-1.539-20H462z M276,384.378V462h-40v-77.463c6.362,0.962,12.873,1.463,19.5,1.463
-            C262.475,386,269.32,385.441,276,384.378z M360.643,332.357l55.164,55.164l-28.285,28.285l-55.086-55.086
-            C343.229,352.771,352.751,343.195,360.643,332.357z" fill="white" />
+      <svg lock="nightmode off" class="btn__icon btn__icon--inactive" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+         width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
+        <path d="M255.5,156c-55.141,0-100,44.86-100,100c0,55.141,44.859,100,100,100s100-44.859,100-100
+          C355.5,200.86,310.641,156,255.5,156z M255.5,316c-33.084,0-60-26.916-60-60s26.916-60,60-60s60,26.916,60,60S288.584,316,255.5,316
+          z M150.779,179.064l-54.586-54.586l28.285-28.284l54.664,54.664C168.305,158.75,158.73,168.272,150.779,179.064z M332.436,151.28
+          l55.086-55.086l28.285,28.284l-55.164,55.165C352.75,168.805,343.229,159.229,332.436,151.28z M127.039,276H50v-40h77.039
+          c-1.012,6.521-1.539,13.2-1.539,20C125.5,262.801,126.027,269.479,127.039,276z M236,127.463V50h40v77.622
+          c-6.68-1.062-13.525-1.622-20.5-1.622C248.873,126,242.362,126.502,236,127.463z M179.143,361.143l-54.664,54.664l-28.285-28.285
+          l54.586-54.585C158.729,343.729,168.305,353.251,179.143,361.143z M462,236v40h-78.039c1.012-6.521,1.539-13.199,1.539-20
+          c0-6.8-0.527-13.479-1.539-20H462z M276,384.378V462h-40v-77.463c6.362,0.962,12.873,1.463,19.5,1.463
+          C262.475,386,269.32,385.441,276,384.378z M360.643,332.357l55.164,55.164l-28.285,28.285l-55.086-55.086
+          C343.229,352.771,352.751,343.195,360.643,332.357z" fill="white" />
         </svg>
 
         <svg class="btn__icon btn__icon--active" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
           <circle cx="256" cy="256" r="206" fill="white"/>
         </svg>
-
-      </button
-
-      ><button id="btn-map" class="btn options__btn column-33" type="button">
+      </button>
+      <!-- Google Maps navigation button -->
+      <button id="btn-map" class="btn options__btn column-33" type="button">
 
         <svg alt="map" class="btn__icon btn__icon--inactive" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
            width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
@@ -150,10 +154,10 @@ I   <link rel="stylesheet" href="/static/sakanyapp/compass/css/app.css">
           s20.953-46.8,46.801-46.8s46.801,20.953,46.801,46.8S281.848,224.133,256,224.133z" fill="white" />
         </svg>
 
-      </button
+      </button>
 
-
-      ><button id="btn-info" class="btn btn-popup options__btn column-33" type="button" data-name='info'>
+      <!-- information button -->
+      <button id="btn-info" class="btn btn-popup options__btn column-33" type="button" data-name='info'>
 
         <svg alt="info" class="btn__icon btn__icon--inactive" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
 
@@ -172,7 +176,7 @@ I   <link rel="stylesheet" href="/static/sakanyapp/compass/css/app.css">
 
   </div>
 
-
+  <!-- error popups -->
   <div id="popup" class="popup">
 
     <div id="popup-content" class="popup__content">
@@ -366,10 +370,14 @@ I   <link rel="stylesheet" href="/static/sakanyapp/compass/css/app.css">
 
   // called on device orientation change
   function onHeadingChange(event) {
+    // hdg is the device's horizontal orientation relative to true north
     var hdg = event.alpha;
+
+    // mathematical values pi and the radius of the earth, in meters
     var pi = Math.PI;
     var rad = 6371e3;
 
+    // convert variables into radians
     var lat1 = geolat * pi / 180;
     var lon1 = geolon * pi / 180;
     var lat2 = publat * pi / 180;
@@ -378,16 +386,21 @@ I   <link rel="stylesheet" href="/static/sakanyapp/compass/css/app.css">
     var deltalat = (lat2 - lat1);
     var deltalon = (lon2 - lon1);
 
+    // trigonometric calculation of bearing
     var x = Math.cos(lat2) * Math.sin(lon2 - lon1);
     var y = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(lon2-lon1);
+    // convert bearing back into decimals
     var brng = (Math.atan2(x, y) * 180 / pi) + 360;
 
+    // adjust heading from true north to calculated bearing
     var heading = (hdg + brng) % 360
 
+    // trigonometric calculation of distance
     var alpha = Math.sin(deltalat/2) * Math.sin(deltalat/2) + Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltalon/2) * Math.sin(deltalon/2)
     var charlie = 2 * Math.atan2(Math.sqrt(alpha), Math.sqrt(1-alpha))
 
     var metricdistance = rad * charlie
+    // convert distance into miles or feet, depending on proximity
     if (metricdistance > 304) {
       var dist = (metricdistance * 0.000621371).toFixed(2)
       var unit = " mi"
@@ -396,8 +409,10 @@ I   <link rel="stylesheet" href="/static/sakanyapp/compass/css/app.css">
       var unit = " ft"
     }
 
+    // stores current distance as a string
     var distance = dist + unit
 
+    // provides distance string as a value on the compass
     document.getElementById("distance").innerHTML = distance;
 
     var orientation = getBrowserOrientation();
@@ -610,6 +625,7 @@ I   <link rel="stylesheet" href="/static/sakanyapp/compass/css/app.css">
     event.stopPropagation();
   }
 
+  // converts coordinates into sexagesimal format for display purposes
   function decimalToSexagesimal(decimal, type) {
     var degrees = decimal | 0;
     var fraction = Math.abs(decimal - degrees);

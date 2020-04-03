@@ -24,15 +24,17 @@ import json
 #     login(request, user)
 #     return HttpResponseRedirect(reverse(''))
 
+# Renders login page
 def login_page(request):
     message = request.GET.get('message', '')
     next = request.GET.get('next', '')
     context = {
-        'next': next,
+        'next': next, #redirects to previously-viewed pages
         'message': message
     }
     return render(request, 'sakanyapp/login.html', context)
 
+# User authentication
 def user_login (request):
     next = request.POST['next']
     username = request.POST['username']
@@ -54,10 +56,11 @@ def user_logout(request):
 @login_required
 def index(request):
     context = {
-        'mapapi': secrets.mapapi
+        'mapapi': secrets.mapapi #calls map api for use with Google Maps
     }
     return render(request, 'sakanyapp/index.html', context)
 
+# Conduct API pulls of Google Maps and Yelp APIs
 @login_required
 def findpub(request):
     save_json = json.loads(request.body)
@@ -76,23 +79,9 @@ def findpub(request):
     #
     origin = (geocoords['lat'],geocoords['lng'])
 
-    # pubresults = {}
-    # for x in yelpdata:
-    #     pubresults.append((x['name'],x['location']['display_address'][0],x['location']['display_address'][-1],x['distance']))
-    #
-    # print(pubresults)
-    # counter = 0
-    # for i in yelpdata:
-    #     key = str(counter)
-    #     pubresults[key] = i
-    #     counter += 1
-    #
-    # print(pubresults)
-    #
-    # return HttpResponse("Success!")
-
     return JsonResponse({'pubresults':yelpdata,'origin':origin})
 
+# Saves user-create pub crawl route
 @login_required
 def newcrawl(request):
     json_data = json.loads(request.body)
@@ -129,6 +118,7 @@ def newcrawl(request):
 def profile(request):
     return render(request, 'sakanyapp/profile.html')
 
+#pulls route information for profile pages
 @login_required
 def routes(request):
     routes = UserRoute.objects.all().filter(creator=request.user)
@@ -203,20 +193,19 @@ def routes(request):
             'steps': routesteps
         })
         sortdata = data
+        # Sorts pub routes, newest first
         data = sorted(sortdata, key=lambda i: i['creation_dtg'], reverse=True)
 
+    # terminal testing
     for dat in data:
         print("name: " + dat['name'])
         print("start_dt / start_time: " + dat['start_dt'] + " / " + dat['start_time'])
         print("end_dt / end_time: " + dat['end_dt'] + " / " + dat['end_time'])
         for step in dat["steps"]:
             print(step)
-    # context = {
-    #     'routes': routes
-    # }
     return JsonResponse({'routes': data})
-    # return render(request, 'sakanyapp/profile.html', context)
 
+# delete routes from profile page
 @login_required
 def delete_route(request, route_id):
     route = UserRoute.objects.get(id=route_id)
