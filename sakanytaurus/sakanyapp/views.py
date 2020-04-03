@@ -47,6 +47,10 @@ def user_login (request):
         return HttpResponseRedirect(reverse('sakanyapp:login') + '?message=failure')
     return HttpResponseRedirect(reverse('sakanyapp:login') + '?message=failure&next='+next)
 
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('sakanyapp:login'))
+
 @login_required
 def index(request):
     context = {

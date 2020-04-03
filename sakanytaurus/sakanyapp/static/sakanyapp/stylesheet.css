@@ -11,13 +11,15 @@
 body {
     line-height: 1.7em;
     background: #3a3d32;
-    color: #7f8c8d;
+    color: #F3F1E0;
     font-size: 13px;
 }
 
 h1,
 h2,
-h3,
+h3 {
+  margin-top: 0;
+},
 h4,
 h5,
 h6,
@@ -53,6 +55,11 @@ label {
  * -- PURE FORM STYLES --
  * Style the form inputs and labels
  */
+
+.header {
+  line-height: 1em;
+}
+
 .pure-form label {
     margin: 1em 0 0;
     font-weight: bold;
@@ -85,18 +92,19 @@ label {
   justify-content: space-around;
 }
 
-.pure-flex-row-norm {
-  display: flex;
-  flex-direction: row;
-  text-align: center;
-  justify-content: normal;
-  margin: 5px;
-}
-
 .pure-flex-column {
   display: flex;
   flex-direction: column;
   text-align: center;
+  justify-content: flex-start;
+}
+
+.pure-flex-column-norm {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: flex-start;
+  margin: 0 5px 5px 5px;
 }
 
 .pure-form.pure-flex-row button {
@@ -106,11 +114,15 @@ label {
   border-radius: 5px;
 }
 
-.pure-form.pure-flex-row-norm button {
+.pure-form.pure-flex-column-norm button {
   background-color: #D88429;
   color: #F3F1E0;
-  margin-bottom: 1em;
+  margin-bottom: .2em;
   border-radius: 5px;
+}
+
+.pure-form.pure-flex-column-norm input {
+  margin-bottom: 0!important;
 }
 
 /*
@@ -153,6 +165,7 @@ button.pure-button {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
 }
 .pure-menu.pure-menu-fixed {
   /* Fixed menus normally have a border at the bottom. */
@@ -165,25 +178,35 @@ button.pure-button {
   color: #F3F1E0;
   font-weight: 400;
   font-size: 120%;
+  padding: 0;
+  margin: 0;
+}
+
+.home-menu .pure-menu-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding-right: .5em;
+}
+
+.home-menu .pure-menu-buttons a{
+  border-radius: 10px;
+}
+
+.home-menu .pure-menu-buttons a:not(:last-child) {
+  margin-bottom: .5em;
+}
+
+.home-menu .pure-button {
+  border: 1px solid #e6e4d3;
 }
 
 .home-menu .pure-menu-selected a {
   color: white;
 }
 
-.home-menu a {
-  color: #6FBEF3;
-}
-
 .home-menu img {
   max-width: 100px;
-}
-
-.home-menu li a:hover,
-.home-menu li a:focus {
-    background: none;
-    border: none;
-    color: #AECFE5;
 }
 
 /* -- MAIN STYLES --
@@ -204,11 +227,12 @@ These are the styles for the main view */
     /* absolute center .main within .main-container */
     width: 80%;
     height: 50%;
-    margin: auto;
+    margin: 100px auto auto auto;
     position: absolute;
     top: 0; left: 0; bottom: 0; right: 0;
     text-align: center;
     text-transform: uppercase;
+    padding-top: 30px;
 }
 
 /* This is the main heading that appears on the blue section */

@@ -17,31 +17,40 @@ I     <link rel="stylesheet" href="/static/sakanyapp/stylesheet.css">
     <div id="app">
       <div class="header">
         <div class="home-menu pure-menu-horizontal pure-menu-fixed">
-          <a class="pure-menu-heading" href=""><img src="{% static "sakanyapp/logo2.png" %}" alt="logo"></a><span class="pure-menu-heading"> A Pub Crawler</span>
+            <div class="">
+              <a class="pure-menu-heading" href="/"><img src="{% static "sakanyapp/logo2.png" %}" alt="logo"></a>
+              <div class="pure-menu-heading">A Pub Crawler</div>
+            </div>
+            <div class="pure-menu-buttons">
+                <a class="pure-button" href="/profile">PROFILE</a>
+                <a class="pure-button" href="/logout">LOGOUT</a>
+            </div>
         </div>
       </div>
       <div class="main">
         <div class="pure-form pure-flex-row">
-          <input type="text" v-model="address" placeholder="Input an address" v-on:keypress.enter="submitAddress">
+          <input type="text" v-model="address" placeholder="Input a starting address" v-on:keypress.enter="submitAddress">
           <button type="submit" class="pure-button" v-on:click="submitAddress">Submit</button>
         </div>
         <div class="pure-g" v-if="submitted">
           <div class="pure-u-1-2">
             <div class="pure-menu custom-restricted-width">
+              <h3>Nearby pubs:</h3>
               <ul class="pure-menu-list">
                 <li @click="pubSelected(pub, i)" v-for="(pub, i) in pubresults" class="pure-menu-item pure-flex-container pure-flex-column">
                   <div v-html="pub.name"></div>
                   <div v-html="pub.location.address1"></div>
                   <div v-bind:style="{ fontSize: .7 + 'em' }" class="pure-flex-row">
-                    <div>[[pub.distance]] mi</div>
+                    <div>[[pub.newdistance]] [[pub.unit]]</div>
                     <div v-html="pub.rating"></div>
-                </div>
+                  </div>
                 </li>
               </ul>
             </div>
           </div>
           <div class="pure-u-1-2">
-            <div class="pure-form pure-flex-row-norm" v-if="selectedpubs[0]">
+            <div class="pure-form pure-flex-column-norm" v-if="selectedpubs[0]">
+              <h3>Your crawl:</h3>
               <input type="text" v-model="crawlname" placeholder="Name this Crawl" v-on:keypress.enter="createCrawl">
               <button type="submit" class="pure-button" v-on:click="createCrawl">Submit</button>
             </div>
@@ -51,7 +60,7 @@ I     <link rel="stylesheet" href="/static/sakanyapp/stylesheet.css">
                   <div v-html="selectedpub.name"></div>
                   <div v-html="selectedpub.location.address1"></div>
                   <div v-bind:style="{ fontSize: .7 + 'em' }" class="pure-flex-row">
-                    <div>[[selectedpub.distance]] mi</div>
+                    <div>[[selectedpub.newdistance]] [[selectedpub.unit]]</div>
                     <div v-html="selectedpub.rating"></div>
                   </div>
                 </li>
@@ -59,7 +68,7 @@ I     <link rel="stylesheet" href="/static/sakanyapp/stylesheet.css">
             </div>
           </div>
         </div>
-        <div>
+        <!-- <div>
           [[ origin[0] ]]
         </div>
         <div>
@@ -67,7 +76,7 @@ I     <link rel="stylesheet" href="/static/sakanyapp/stylesheet.css">
         </div>
         <div v-for="pub in pubresults">
           [[ pub.alias ]]
-        </div>
+        </div> -->
         <div v-if="displaymap">
           <div id="map" style="height: 60vh; width: 80vw;"></div>
         </div>
@@ -128,6 +137,8 @@ I     <link rel="stylesheet" href="/static/sakanyapp/stylesheet.css">
           displaymap: false,
           selectedpubs: [],
           crawlname: '',
+          currentlat: 0,
+          currentlon: 0
         },
         methods: {
           submitAddress: function() {
@@ -149,7 +160,13 @@ I     <link rel="stylesheet" href="/static/sakanyapp/stylesheet.css">
                 this.pubresults=response.data.pubresults
                 this.origin = response.data.origin
                 for (pub of this.pubresults) {
-                  pub.distance = (pub.distance * 0.000621371).toFixed(2)
+                  if (pub.distance > 304) {
+                    pub.newdistance = (pub.distance * 0.000621371).toFixed(2)
+                    pub.unit = "mi"
+                  } else {
+                    pub.newdistance = (pub.distance * 3.28084).toFixed(0)
+                    pub.unit = "ft"
+                  }
                 }
               })
             }
