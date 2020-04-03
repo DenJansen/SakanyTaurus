@@ -34,6 +34,7 @@
           <h2><div class="pure-flex-row-center">
             <div></div>
             <div v-html="route.name"></div>
+            <a v-bind:href="'/delete/' + route.id"><i class="fa fa-times-circle"></i></a>
           </h2>
           <div v-for="(step, index) in route.steps" class="pure-button-group" role="group">
             <button class="pure-button" @click="openCompass(step, index)">

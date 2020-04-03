@@ -220,8 +220,8 @@ def routes(request):
 @login_required
 def delete_route(request, route_id):
     route = UserRoute.objects.get(id=route_id)
-    route.delete
-    return render(request, 'sakanyapp/profile.html')
+    route.delete()
+    return HttpResponseRedirect(reverse('sakanyapp:profile'))
 
 @login_required
 def compass(request):
