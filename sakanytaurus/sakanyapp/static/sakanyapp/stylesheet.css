@@ -99,6 +99,17 @@ label {
   justify-content: space-around;
 }
 
+.pure-flex-row-center {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  justify-content: center;
+}
+
+.pure-flex-row-center i {
+  padding-left: .5em;
+}
+
 .pure-flex-column {
   display: flex;
   flex-direction: column;

@@ -73,9 +73,21 @@ header {
   transition: transform 0.5s ease-out 0s;
 }
 
+.header-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: auto;
+}
 
+.fa {
+  font-size: 2rem;
+}
 
-
+.header-container a {
+  margin: auto .5em auto 0;
+  color: white;
+}
 
 .container {
   padding: 5rem 1rem 8rem 1rem;

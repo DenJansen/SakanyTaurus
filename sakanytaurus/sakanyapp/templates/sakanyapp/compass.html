@@ -11,11 +11,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#000000">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" SameSite=None>
     <link rel="manifest" href="{% static "sakanyapp/compass/manifest.json" %}">
     <link rel="icon" sizes="192x192" href="{% static "sakanyapp/compass/images/logo-app.png" %}">
     <link rel="apple-touch-icon" href="{% static "sakanyapp/compass/images/logo-app.png" %}">
 
-    <title>Compass</title>
+    <title>Beer Navigator</title>
 I   <link rel="stylesheet" href="/static/sakanyapp/compass/css/app.css">
 
 </head>
@@ -27,7 +28,11 @@ I   <link rel="stylesheet" href="/static/sakanyapp/compass/css/app.css">
 
 
   <header>
-    <h1>Compass</h1>
+    <div class="header-container">
+      <h1>This way to beer!</h1>
+      <a href="/profile"><i class="fa fa-caret-square-o-left"></i>
+</a>
+    </div>
   </header>
 
 
@@ -48,7 +53,7 @@ I   <link rel="stylesheet" href="/static/sakanyapp/compass/css/app.css">
           <polyline points="63,121  67,121  65,119" fill="white"/>
           <polyline points="9,63  9,67  11,65" fill="white"/>
 
-          <text x="65" y="4.2" font-size="5" text-anchor="middle" fill="white">DEST</text>
+          <text x="65" y="4.2" font-size="8" text-anchor="middle" fill="white" id="distance"></text>
           <text x="127" y="67" font-size="5" text-anchor="middle" fill="white"></text>
           <text x="65" y="129" font-size="5" text-anchor="middle" fill="white"></text>
           <text x="2.8" y="67" font-size="5" text-anchor="middle" fill="white"></text>
@@ -60,7 +65,6 @@ I   <link rel="stylesheet" href="/static/sakanyapp/compass/css/app.css">
       <svg class="compass__pointer" viewBox="0 0 130 130" version="1.1" xmlns="http://www.w3.org/2000/svg">
 
         <polyline points="60,60  70,60  65,15" fill="#b60000"/>
-        <polyline points="60,70  70,70  65,115" fill="white"/>
         <circle cx="65" cy="65" r="7" stroke="#b60000" stroke-width="7" fill="none" />
 
       </svg>
@@ -364,18 +368,37 @@ I   <link rel="stylesheet" href="/static/sakanyapp/compass/css/app.css">
   function onHeadingChange(event) {
     var hdg = event.alpha;
     var pi = Math.PI;
+    var rad = 6371e3;
 
     var lat1 = geolat * pi / 180;
     var lon1 = geolon * pi / 180;
     var lat2 = publat * pi / 180;
     var lon2 = publon * pi / 180;
 
+    var deltalat = (lat2 - lat1);
+    var deltalon = (lon2 - lon1);
+
     var x = Math.cos(lat2) * Math.sin(lon2 - lon1);
     var y = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(lon2-lon1);
     var brng = (Math.atan2(x, y) * 180 / pi) + 360;
 
     var heading = (hdg + brng) % 360
-    console.log(heading)
+
+    var alpha = Math.sin(deltalat/2) * Math.sin(deltalat/2) + Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltalon/2) * Math.sin(deltalon/2)
+    var charlie = 2 * Math.atan2(Math.sqrt(alpha), Math.sqrt(1-alpha))
+
+    var metricdistance = rad * charlie
+    if (metricdistance > 304) {
+      var dist = (metricdistance * 0.000621371).toFixed(2)
+      var unit = " mi"
+    } else {
+      var dist = (metricdistance * 3.28084).toFixed(0)
+      var unit = " ft"
+    }
+
+    var distance = dist + unit
+
+    document.getElementById("distance").innerHTML = distance;
 
     var orientation = getBrowserOrientation();
 
@@ -562,7 +585,7 @@ I   <link rel="stylesheet" href="/static/sakanyapp/compass/css/app.css">
   }
 
   function openMap() {
-    window.open("https://www.google.com/maps/dir/destination=" + publat + "," + publon + "&travelmode=walking");
+    window.open("https://www.google.com/maps/search/" + publat + "," + publon);
   }
 
   function popupOpenFromClick(event) {

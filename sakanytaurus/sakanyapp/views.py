@@ -134,6 +134,7 @@ def routes(request):
     routes = UserRoute.objects.all().filter(creator=request.user)
     data = []
     for route in routes:
+        route_id = route.id
         start_dt = ''
         start_time = ''
         end_dt = ''
@@ -190,6 +191,7 @@ def routes(request):
                 'visited': str(step.visited)
             })
         data.append({
+            'id': route_id,
             'name': route.name,
             'creation_dtg': creation_dtg,
             'create_dt': create_dt,
@@ -214,6 +216,12 @@ def routes(request):
     # }
     return JsonResponse({'routes': data})
     # return render(request, 'sakanyapp/profile.html', context)
+
+@login_required
+def delete_route(request, route_id):
+    route = UserRoute.objects.get(id=route_id)
+    route.delete
+    return render(request, 'sakanyapp/profile.html')
 
 @login_required
 def compass(request):
