@@ -113,7 +113,14 @@ def newcrawl(request):
         loc_address = ', '.join(pub['location']['display_address'])
         loc_lat = pub['coordinates']['latitude']
         loc_lon = pub['coordinates']['longitude']
-        create_crawl = RouteStep(route=newcrawl, order_num=order_num, loc_name=loc_name, loc_rating=loc_rating, loc_address=loc_address, loc_lat=loc_lat, loc_lon=loc_lon)
+        distance = pub['distance']
+        newdistance = float(pub['newdistance'])
+        unit = pub['unit']
+        stars = pub['stars']
+        halfstar = pub['halfstar']
+        review_count = pub['review_count']
+
+        create_crawl = RouteStep(route=newcrawl, order_num=order_num, loc_name=loc_name, loc_rating=loc_rating, loc_address=loc_address, loc_lat=loc_lat, loc_lon=loc_lon, distance=distance, newdistance=newdistance, unit=unit, stars=stars, halfstar=halfstar, review_count=review_count)
         create_crawl.save()
 
     return HttpResponseRedirect(reverse('sakanyapp:profile'))
@@ -131,13 +138,16 @@ def routes(request):
         start_time = ''
         end_dt = ''
         end_time = ''
+        creation_dtg = str(route.creation_dtg)
+        create_dt = route.creation_dtg.strftime('%Y/%m/%d')
+        create_time = route.creation_dtg.strftime('%H:%M')
 
         if route.start_time:
             start_dt = route.start_time.strftime('%m/%d/%Y')
             start_time = route.start_time.strftime('%H:%M')
         if route.end_time:
             end_dt = route.end_time.strftime('%m/%d/%Y')
-            end_time = route.end_time.strftime('%H:%M')
+            end_time = route.end_time.strftime('%H:%M:%S')
 
         steps = RouteStep.objects.all().filter(route=route)
         routesteps = []
@@ -165,6 +175,12 @@ def routes(request):
                 'loc_address': step.loc_address,
                 'loc_lat': step.loc_lat,
                 'loc_lon': step.loc_lon,
+                'distance': step.distance,
+                'newdistance': step.newdistance,
+                'unit': step.unit,
+                'stars': step.stars,
+                'halfstar': step.halfstar,
+                'review_count': step.review_count,
                 'open_dt': open_dt,
                 'open_time': open_time,
                 'close_dt': close_dt,
@@ -175,12 +191,18 @@ def routes(request):
             })
         data.append({
             'name': route.name,
+            'creation_dtg': creation_dtg,
+            'create_dt': create_dt,
+            'create_time': create_time,
             'start_dt': start_dt,
             'start_time': start_time,
             'end_dt': end_dt,
             'end_time': end_time,
             'steps': routesteps
         })
+        sortdata = data
+        data = sorted(sortdata, key=lambda i: i['creation_dtg'], reverse=True)
+
     for dat in data:
         print("name: " + dat['name'])
         print("start_dt / start_time: " + dat['start_dt'] + " / " + dat['start_time'])

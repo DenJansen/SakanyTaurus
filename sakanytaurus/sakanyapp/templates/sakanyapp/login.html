@@ -25,11 +25,11 @@
             </div>
         </div>
       </div>
-      <div class="login-container">
-        <div class="login">
+      <div class="main-container">
+        <div class="main">
           <div v-if="registered==true">
-            <h1 class="login-head">Login</h1>
-            <div class="login-subhead">
+            <h1 class="main-head">Login</h1>
+            <div class="main-subhead">
               <div class="pure-form pure-form-stacked">
                 <form action="{% url 'sakanyapp:user_login' %}" method="post">
                   {% csrf_token %}
@@ -37,7 +37,7 @@
                   <input type="text" name="username" id="username" value="" placeholder="Username">
                   <input type="password" name="password" id="password" value="" placeholder="Password">
                   <button type="submit" class="pure-button">Login</button>
-                  <button type="submit" class="pure-button" v-on:click="registered=!registered">Register</button>
+                  <button class="pure-button" v-on:click="registered=!registered">Register</button>
                 </form>
                 <!-- <input type="text" placeholder="Username" v-model="username">
                 <input type="password" placeholder="Password" v-model="password" v-on:keypress.enter="userLogin"> -->
@@ -47,8 +47,8 @@
             </div>
           </div>
           <div v-if="registered==false">
-            <h1 class="login-head">Register</h1>
-            <div class="login-subhead">
+            <h1 class="main-head">Register</h1>
+            <div class="main-subhead">
               <h3>Please input your details below:</h3>
               <div class="pure-form pure-form-stacked">
                 <input type="text" placeholder="Username" v-model="newusername">
@@ -60,7 +60,8 @@
                 <input type="password" placeholder="Confirm password" v-model="newpass2">
                 <!-- <div class="g-recaptcha" >
                 </div> -->
-                <button type="submit" class="pure-button" v-on:click="newUser">Login</button>
+                <button class="pure-button" v-on:click="registered=!registered">Cancel</button>
+                <button type="submit" class="pure-button" v-on:click="newUser">Register</button>
               </div>
             </div>
           </div>

@@ -9,7 +9,8 @@
     <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <!-- import Pure CSS framework -->
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-" crossorigin="anonymous">
-I     <link rel="stylesheet" href="/static/sakanyapp/stylesheet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" SameSite=None>
+    <link rel="stylesheet" href="/static/sakanyapp/stylesheet.css">
     {% load static %}
     <title></title>
   </head>
@@ -36,95 +37,57 @@ I     <link rel="stylesheet" href="/static/sakanyapp/stylesheet.css">
           <div class="pure-u-1-2">
             <div class="pure-menu custom-restricted-width">
               <h3>Nearby pubs:</h3>
+              <h6>click to add</h6>
               <ul class="pure-menu-list">
                 <li @click="pubSelected(pub, i)" v-for="(pub, i) in pubresults" class="pure-menu-item pure-flex-container pure-flex-column">
                   <div v-html="pub.name"></div>
                   <div v-html="pub.location.address1"></div>
+                  <div>
+                    <span v-html="pub.location.city"></span>, <span v-html="pub.location.state"></span> <span v-html="pub.location.zip_code"></span>
+                  </div>
                   <div v-bind:style="{ fontSize: .7 + 'em' }" class="pure-flex-row">
                     <div>[[pub.newdistance]] [[pub.unit]]</div>
-                    <div v-html="pub.rating"></div>
+                    <div>
+                      <i class="fa fa-star" v-for="i in pub.stars"></i><i class="fa fa-star-half" v-if="pub.halfstar > 0"></i><span> ([[pub.review_count]])</span>
+                    </div>
                   </div>
                 </li>
               </ul>
             </div>
           </div>
-          <div class="pure-u-1-2">
-            <div class="pure-form pure-flex-column-norm" v-if="selectedpubs[0]">
+          <div class="pure-u-1-2" v-if="selectedpubs[0]">
+            <div class="pure-form pure-flex-column-norm">
               <h3>Your crawl:</h3>
               <input type="text" v-model="crawlname" placeholder="Name this Crawl" v-on:keypress.enter="createCrawl">
               <button type="submit" class="pure-button" v-on:click="createCrawl">Submit</button>
             </div>
             <div class="pure-menu custom-restricted-width">
+              <h6>click to remove</h6>
               <ul class="pure-menu-list">
-                <li @click="pubDeselected(selectedpub, i)" v-for="(selectedpub, i) in selectedpubs" class="pure-menu-item pure-flex-container pure-flex-column">
-                  <div v-html="selectedpub.name"></div>
-                  <div v-html="selectedpub.location.address1"></div>
-                  <div v-bind:style="{ fontSize: .7 + 'em' }" class="pure-flex-row">
-                    <div>[[selectedpub.newdistance]] [[selectedpub.unit]]</div>
-                    <div v-html="selectedpub.rating"></div>
-                  </div>
-                </li>
+                <div v-for="(selectedpub, i) in selectedpubs">
+                  <li @click="pubDeselected(selectedpub, i)" class="pure-menu-item pure-flex-container pure-flex-column">
+                    <div v-html="selectedpub.name"></div>
+                    <div v-html="selectedpub.location.address1"></div>
+                    <div>
+                      <span v-html="selectedpub.location.city"></span>, <span v-html="selectedpub.location.state"></span> <span v-html="selectedpub.location.zip_code"></span>
+                    </div>
+                    <div v-bind:style="{ fontSize: .7 + 'em' }" class="pure-flex-row">
+                      <div>[[selectedpub.newdistance]] [[selectedpub.unit]]</div>
+                      <div>
+                        <i class="fa fa-star" v-for="i in selectedpub.stars"></i><i class="fa fa-star-half" v-if="selectedpub.halfstar > 0"></i><span> ([[selectedpub.review_count]])</span>
+                      </div>
+                    </div>
+                  </li>
+                  <i class="fa fa-long-arrow-down fa-xs" v-if="i != selectedpubs.length - 1"></i>
+                </div>
               </ul>
             </div>
           </div>
-        </div>
-        <!-- <div>
-          [[ origin[0] ]]
-        </div>
-        <div>
-          [[ origin[1] ]]
-        </div>
-        <div v-for="pub in pubresults">
-          [[ pub.alias ]]
-        </div> -->
-        <div v-if="displaymap">
-          <div id="map" style="height: 60vh; width: 80vw;"></div>
         </div>
       </div>
     </div>
 
     <script type="text/javascript">
-      // var locations = [
-      //   ['Bondi Beach', -33.890542, 151.274856, 4],
-      //   ['Coogee Beach', -33.923036, 151.259052, 5],
-      //   ['Cronulla Beach', -34.028249, 151.157507, 3],
-      //   ['Manly Beach', -33.80010128657071, 151.28747820854187, 2],
-      //   ['Maroubra Beach', -33.950198, 151.259302, 1]
-      // ];
-      // var coordinates
-      // var map;
-      // function initMap() {
-      //   map = new google.maps.Map(document.getElementById('map'), {
-      //     center: {lat: -33.92, lng: 151.25},
-      //     zoom: 10,
-      //   });
-      //   var infowindow = new google.maps.InfoWindow();
-      //
-      //   var marker, i;
-      //
-      //   setTimeout(function(){
-      //     for (i = 0; i < locations.length; i++) {
-      //       createMarkers(i);
-      //     }
-      //   }, 200)
-      // }
-      // function createMarkers(i) {
-      //   setTimeout(function() {
-      //     marker = new google.maps.Marker({
-      //       position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-      //       title:locations[i][0],
-      //       map: map,
-      //       animation: google.maps.Animation.DROP
-      //     });
-      //     google.maps.event.addListener(marker, 'click', (function(marker, i) {
-      //       return function() {
-      //         infowindow.setContent(locations[i][0]);
-      //         infowindow.open(map, marker);
-      //       }
-      //     })(marker, i));
-      //   }, 200*i);
-      // }
-
       let app = new Vue({
         el: '#app',
         delimiters: ['[[',']]'],
@@ -138,7 +101,8 @@ I     <link rel="stylesheet" href="/static/sakanyapp/stylesheet.css">
           selectedpubs: [],
           crawlname: '',
           currentlat: 0,
-          currentlon: 0
+          currentlon: 0,
+          distance: 0,
         },
         methods: {
           submitAddress: function() {
@@ -167,6 +131,8 @@ I     <link rel="stylesheet" href="/static/sakanyapp/stylesheet.css">
                     pub.newdistance = (pub.distance * 3.28084).toFixed(0)
                     pub.unit = "ft"
                   }
+                  pub.stars = pub.rating -(pub.rating % 1)
+                  pub.halfstar = pub.rating % 1
                 }
               })
             }
@@ -178,11 +144,77 @@ I     <link rel="stylesheet" href="/static/sakanyapp/stylesheet.css">
           },
           pubSelected: function(pub, i) {
             this.selectedpubs.push(pub)
+            this.currentlat = pub.coordinates.latitude
+            this.currentlon = pub.coordinates.longitude
             this.pubresults.splice(i, 1)
+            for (pubs of this.pubresults) {
+              this.distCalc(pubs, i)
+            }
+            this.pubresults.sort((a, b) => {
+              return a.distance - b.distance
+            })
+            index = 0
+            for (pubs of this.selectedpubs) {
+              index++
+              if (index == 1) {
+                this.currentlat = pubs.coordinates.latitude
+                this.currentlon = pubs.coordinates.longitude
+              }
+              this.distCalc(pubs, i)
+              this.currentlat = pubs.coordinates.latitude
+              this.currentlon = pubs.coordinates.longitude
+            }
+            this.pubresults.sort((a, b) => {
+              return a.distance - b.distance
+            })
+            console.log(this.selectedpubs)
           },
           pubDeselected: function(pub, i) {
             this.pubresults.push(pub)
             this.selectedpubs.splice(i, 1)
+            if (this.selectedpubs.length > 0) {
+              this.currentlat = this.selectedpubs[this.selectedpubs.length-1].coordinates.latitude
+              this.currentlon = this.selectedpubs[this.selectedpubs.length-1]
+              index = 0
+              for (pubs of this.selectedpubs) {
+                index++
+                if (index == 1) {
+                  this.currentlat = pubs.coordinates.latitude
+                  this.currentlon = pubs.coordinates.longitude
+                }
+                this.distCalc(pubs, i)
+                this.currentlat = pubs.coordinates.latitude
+                this.currentlon = pubs.coordinates.longitude
+              }
+            } else {
+              this.currentlat = this.origin[0]
+              this.currentlon = this.origin[1]
+            }
+            for (pubs of this.pubresults) {
+              this.distCalc(pubs, i)
+            }
+            this.pubresults.sort((a, b) => {
+              return a.distance - b.distance
+            })
+            console.log(this.selectedpubs)
+          },
+          distCalc: function(pub, i) {
+            rad = 6371e3
+            pi = Math.PI
+            lat1 = this.currentlat * pi / 180
+            lat2 = pub.coordinates.latitude * pi / 180
+            deltalat = (pub.coordinates.latitude - this.currentlat) * pi / 180
+            deltalon = (pub.coordinates.longitude - this.currentlon) * pi / 180
+            alpha = Math.sin(deltalat/2) * Math.sin(deltalat/2) + Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltalon/2) * Math.sin(deltalon/2)
+            charlie = 2 * Math.atan2(Math.sqrt(alpha), Math.sqrt(1-alpha))
+            pub.distance = rad * charlie
+            if (pub.distance > 304) {
+              pub.newdistance = (pub.distance * 0.000621371).toFixed(2)
+              pub.unit = "mi"
+            } else {
+              pub.newdistance = (pub.distance * 3.28084).toFixed(0)
+              pub.unit = "ft"
+            }
           },
           createCrawl: function() {
             if (this.selectedpubs && this.crawlname) {

@@ -1,11 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
+from datetime import datetime
 
 # Create your models here.
 class UserRoute(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length = 20)
+    creation_dtg = models.DateTimeField(
+        default = datetime.now
+    )
     start_time = models.DateTimeField(
         blank = True,
         null = True
@@ -45,6 +49,12 @@ class RouteStep(models.Model):
         null = True
     )
     visited = models.BooleanField(default=False)
+    distance = models.FloatField()
+    newdistance = models.FloatField()
+    unit = models.CharField(max_length = 20)
+    stars = models.PositiveSmallIntegerField()
+    halfstar = models.FloatField()
+    review_count = models.PositiveSmallIntegerField()
 
     def __str__(self):
         return ' Route: ' + self.route.name + ' | Step: ' + str(self.order_num) + ' | Arrival Time: ' + str(self.arr_time) + ' | Visited: ' + str(self.visited)

@@ -29,8 +29,9 @@
         </div>
       </div>
       <div class="main">
+        <h3>Click on a pub to navigate</h3>
         <div v-for="route in routes">
-          <h1><div v-html="route.name"></div></h1>
+          <h2><div v-html="route.name"></div></h2>
           <div v-for="(step, index) in route.steps" class="pure-button-group" role="group">
             <button v-html="step.loc_name" class="pure-button" @click="openCompass(step, index)"></button><br>
             <i class="fa fa-long-arrow-down" v-if="index != route.steps.length - 1"></i>
